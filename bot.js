@@ -1,49 +1,39 @@
-const Discord = require('discord.io');
-const logger = require('winston');
-
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-    colorize: true
-});
-logger.level = 'debug';
+const Discord = require('discord.js');
+const api = new Discord.Client();
 
 const auth = require('./secret.json');
 const token = auth.token;
 
 // Initialize Discord Bot
-var api = new Discord.Client({
-   token: token,
-   autorun: true
+
+api.on('ready', () => {
+    console.log(`Connected as ${api.user.tag}`);
 });
 
-const util = require('util.js');
-
-api.on('ready', function (evt) {
-    logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
-});
-
-api.on('message', function (user, userID, channelID, message, evt) {
-    // Our bot needs to know if it will execute a command
-    // It will listen for messages that will start with `//`
-    if (message.substring(0, 2) == '//') {
-        var args = message.substring(2).split(' ');
-       
-        args = args.splice(1);
+api.on('message', msg => {
+    console.log({msg});
+    if (msg.substring(0, 2) == '//') {
+        const mess = msg.substring(2).toLowerCase;
+        const args = mess.split(' ');
         switch(args[0]) {
             case 'ping':
+                msg.reply('pong!')
+                break;
+            case 'say':
+                if (args[1] !== null) {
+                    msg.reply(mess.substring(4));
+                }
+                break;
+            default:
                 api.sendMessage({
                     to: channelID,
-                    message: 'Pong!'
+                    message: `Sorry this command is not available yet ;(`
                 });
-            case 'say':
-                util.sendReply("test");
-            break;
          }
      }
 });
 
-module.exports.token = token;
-module.exports.bot = api;
+client.login(token);
+
+// module.exports.token = token;
+// module.exports.bot = api;

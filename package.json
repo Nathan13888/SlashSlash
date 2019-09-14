@@ -16,7 +16,6 @@
   "author": "nathan13888",
   "license": "AGPL-3.0",
   "dependencies": {
-    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
-    "winston": "^3.2.1"
+    "discord.js": "discord.js"
   }
 }
