@@ -10,30 +10,33 @@ api.on('ready', () => {
     console.log(`Connected as ${api.user.tag}`);
 });
 
-api.on('message', msg => {
-    console.log({msg});
-    if (msg.substring(0, 2) == '//') {
-        const mess = msg.substring(2).toLowerCase;
-        const args = mess.split(' ');
+api.on('message', evt => {
+    if (evt.content.substring(0, 2) == '//') {
+        const cmd = evt.content.substring(2).toLowerCase();
+
+        // Log Commands
+        console.log(`[COMMAND] ${evt.author.tag} executed '${cmd}' `);
+
+        const args = cmd.split(' ');
         switch(args[0]) {
             case 'ping':
-                msg.reply('pong!')
+                evt.reply('pong!')
                 break;
             case 'say':
                 if (args[1] !== null) {
-                    msg.reply(mess.substring(4));
+                    evt.channel.send(cmd.substring(4));
+                    evt.delete()
+                    .then(msg => {})
+                    .catch(console.error);
                 }
                 break;
             default:
-                api.sendMessage({
-                    to: channelID,
-                    message: `Sorry this command is not available yet ;(`
-                });
+                evt.reply(`Sorry this command is not available yet ;(`);
          }
      }
 });
 
-client.login(token);
+api.login(token);
 
 // module.exports.token = token;
 // module.exports.bot = api;

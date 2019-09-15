@@ -16,6 +16,6 @@
   "author": "nathan13888",
   "license": "AGPL-3.0",
   "dependencies": {
-    "discord.js": "discord.js"
+    "discord.js": "^11.5.1"
   }
 }
