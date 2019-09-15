@@ -37,6 +37,3 @@ api.on('message', evt => {
 });
 
 api.login(token);
-
-// module.exports.token = token;
-// module.exports.bot = api;
