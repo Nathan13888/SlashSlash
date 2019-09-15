@@ -1,39 +1,39 @@
-var Discord = require('discord.io');
-var logger = require('winston');
-var auth = require('./secret.json');
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-    colorize: true
-});
-logger.level = 'debug';
+const Discord = require('discord.js');
+const api = new Discord.Client();
+
+const auth = require('./secret.json');
+const token = auth.token;
+
 // Initialize Discord Bot
-var bot = new Discord.Client({
-   token: auth.token,
-   autorun: true
+
+api.on('ready', () => {
+    console.log(`Connected as ${api.user.tag}`);
 });
 
-bot.on('ready', function (evt) {
-    logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
-});
+api.on('message', evt => {
+    if (evt.content.substring(0, 2) == '//') {
+        const cmd = evt.content.substring(2).toLowerCase();
 
-bot.on('message', function (user, userID, channelID, message, evt) {
-    // Our bot needs to know if it will execute a command
-    // It will listen for messages that will start with `//`
-    if (message.substring(0, 2) == '//') {
-        var args = message.substring(2).split(' ');
-        var cmd = args[0];
-       
-        args = args.splice(1);
-        switch(cmd) {
+        // Log Commands
+        console.log(`[COMMAND] ${evt.author.tag} executed '${cmd}' `);
+
+        const args = cmd.split(' ');
+        switch(args[0]) {
             case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
-            break;
+                evt.reply('pong!')
+                break;
+            case 'say':
+                if (args[1] !== null) {
+                    evt.channel.send(cmd.substring(4));
+                    evt.delete()
+                    .then(msg => {})
+                    .catch(console.error);
+                }
+                break;
+            default:
+                evt.reply(`Sorry this command is not available yet ;(`);
          }
      }
 });
+
+api.login(token);
